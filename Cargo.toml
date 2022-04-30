@@ -1,0 +1,15 @@
+[package]
+edition = "2021"
+name = "bevy_wfc"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+wfc_solver = {path = "./wfc_solver"}
+bevy = "0.7.0"
+
+[workspace]
+members = ["wfc_solver"]
+
+# cargo run --target wasm32-unknown-unknown
