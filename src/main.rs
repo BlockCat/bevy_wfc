@@ -1,4 +1,14 @@
-use bevy::prelude::*;
+use bevy::{asset, prelude::*};
+use bevy_asset_ron::RonAssetPlugin;
+use bevy_fly_camera::{FlyCamera, FlyCameraPlugin};
+use ui::UIPlugin;
+use wfc_asset::{TileAsset, WfcAssetPlugin};
+
+mod wfc_asset;
+mod ui;
+
+#[derive(Debug, Component)]
+struct TileTag;
 
 /// This example shows how to configure Multi-Sample Anti-Aliasing. Setting the sample count higher
 /// will result in smoother edges, but it will also increase the cost to render those edges. The
@@ -11,43 +21,38 @@ fn main() {
     App::new()
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
+        .add_plugin(FlyCameraPlugin)
+        .add_plugin(WfcAssetPlugin)
+        .add_plugin(UIPlugin)
         .add_startup_system(setup)
         .add_system(cycle_msaa)
-        .add_system(rotate)
         .run();
 }
 
 /// set up a simple 3D scene
 fn setup(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    asset_server: Res<AssetServer>,
 ) {
-    info!("Press 'm' to toggle MSAA");
-    info!("Using 4x MSAA");
+    let rekt: Handle<TileAsset> = asset_server.load("straight.tile");
+    let rekt2: Handle<TileAsset> = asset_server.load("corner.tile");
 
-    // cube
-    commands.spawn_bundle(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Cube { size: 2.0 })),
-        material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-        ..default()
-    });
+    commands.spawn().insert(rekt);
+    commands.spawn().insert(rekt2);
+
     // light
     commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..default()
     });
     // camera
-    commands.spawn_bundle(PerspectiveCameraBundle {
-        transform: Transform::from_xyz(-3.0, 3.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
-        ..default()
-    });
-}
-
-fn rotate(mut queue: Query<(&Handle<Mesh>, &mut Transform)>) {
-    queue.for_each_mut(|(_, mut t)| {
-        t.rotate(Quat::from_rotation_y(0.01));
-    });
+    commands
+        .spawn_bundle(PerspectiveCameraBundle {
+            transform: Transform::from_xyz(-3.0, 3.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+            ..default()
+        })
+        .insert(FlyCamera::default());
 }
 
 fn cycle_msaa(input: Res<Input<KeyCode>>, mut msaa: ResMut<Msaa>) {
@@ -61,3 +66,4 @@ fn cycle_msaa(input: Res<Input<KeyCode>>, mut msaa: ResMut<Msaa>) {
         }
     }
 }
+

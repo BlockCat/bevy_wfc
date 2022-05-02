@@ -1,0 +1,38 @@
+(
+    scene: (
+        path: "./models/corner.glb#Scene0",
+        position: (0, 0, 0),
+        scale: (1, 1, 1),
+    ),
+    tile: (
+        id: "RoofCorner",
+        up: [(
+            connection: "air"
+        )],
+        down: [(
+            connection: "block"
+        )],
+        left: [(
+            connection: "roof",
+            flipped: false,
+            symmetry: false
+        )],
+        right: [(
+            connection: "air",
+            flipped: true,
+            symmetry: false
+        )],
+        forward: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true,
+        )],
+        backward: [(
+            connection: "roof",
+            flipped: true,
+            symmetry: false,
+        )],
+        can_rotate: true,
+        can_flip: true,
+    )
+)

@@ -1,0 +1,45 @@
+(
+    scene: (
+        path: "./models/straight.glb#Scene0",
+        position: (0, 0, 0),
+        scale: (1, 1, 1),
+    ),
+    tile: (
+        id: "RoofStraight",
+        up: [(
+            connection: "air"
+        )],
+        down: [(
+            connection: "block"
+        )],
+        left: [(
+            connection: "roof",
+            flipped: false,
+            symmetry: false
+        )],
+        right: [(
+            connection: "roof",
+            flipped: true,
+            symmetry: false
+        )],
+        forward: [
+            (
+                connection: "block",
+                flipped: false,
+                symmetry: true,
+            ),
+            (
+                connection: "half-roof",
+                flipped: false,
+                symmetry: true,
+            )
+        ],
+        backward: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        can_rotate: true,
+        can_flip: true,
+    )
+)

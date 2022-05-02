@@ -15,11 +15,11 @@ pub struct Solution<D> {
     compiled: CompiledDescription,
 }
 
-pub fn solve<D>(description: ProblemDescription<D>) -> Result<Solution<D>, ProblemError> {
+pub fn solve<D, R: rand::Rng>(rng: &mut R, description: ProblemDescription<D>) -> Result<Solution<D>, ProblemError> {
     let compiled = description.compile();
     let mut solver = NaiveSolver::default();
 
-    let grid = solver.solve(&compiled)?;
+    let grid = solver.solve(rng, &compiled)?;
 
     Ok(Solution {
         grid,

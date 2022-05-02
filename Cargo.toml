@@ -6,9 +6,14 @@ version = "0.1.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-wfc_solver = {path = "./wfc_solver"}
 bevy = "0.7.0"
+bevy_asset_ron = "0.4.0"
+bevy_egui = "0.14"
+bevy_fly_camera = {git = "https://github.com/PikminGuts92/bevy_fly_camera", branch = "bevy-0.7"}
+rand = {version = "0.8.5", default-features = false, features = ["small_rng"]}
 
+serde = {version = "1", features = ["derive"]}
+wfc_solver = {path = "./wfc_solver"}
 [workspace]
 members = ["wfc_solver"]
 

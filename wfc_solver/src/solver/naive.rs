@@ -1,43 +1,38 @@
-use std::{collections::VecDeque, ops::Range};
-
-use bitvec::prelude::BitVec;
-use rand::{
-    distributions::uniform::UniformSampler,
-    prelude::{IteratorRandom, SliceRandom},
-    SeedableRng,
-};
-
-use crate::{
-    description::{self, CompiledDescription},
-    error::ProblemError,
-    utils::{Dimensions, FieldGrid, Point},
-};
-
 use super::ProblemSolver;
+use crate::{
+    description::CompiledDescription,
+    error::ProblemError,
+    utils::{FieldGrid, Point},
+};
+use bitvec::prelude::BitVec;
+use rand::{distributions::uniform::UniformSampler, prelude::IteratorRandom, Rng};
+use std::collections::VecDeque;
 
 #[derive(Debug, Default)]
 pub struct NaiveSolver {}
 
 impl ProblemSolver for NaiveSolver {
-    fn solve(&mut self, description: &CompiledDescription) -> Result<FieldGrid, ProblemError> {
+    fn solve<R: Rng>(
+        &mut self,
+        rng: &mut R,
+        description: &CompiledDescription,
+    ) -> Result<FieldGrid, ProblemError> {
         if description.dimensions() != description.initial_grid().dimensions() {
             return Err(ProblemError::Dimensions);
         }
 
         let mut grid = FieldGrid::new(description.dimensions(), description.all_domain());
 
-        update_initial_domain(&mut grid, description.initial_grid())?;
+        // update_initial_domain(&mut grid, description.initial_grid())?;
         update_initial_sides(&mut grid, description)?;
 
         if !grid.is_satisfiable() {
             return Err(ProblemError::Unsatisfiable);
         }
 
-        let mut rng = rand::rngs::SmallRng::seed_from_u64(0);
+        let initial_point = description.dimensions().sample(rng);
 
-        let initial_point = description.dimensions().sample(&mut rng);
-
-        start_processs(&mut grid, initial_point, &mut rng, description)?;
+        start_processs(&mut grid, initial_point, rng, description)?;
 
         Ok(grid)
     }
@@ -120,10 +115,10 @@ fn start_processs<R: rand::Rng>(
         let mut vec = BitVec::repeat(false, point_vec.len());
         vec.set(fixed_index, true);
 
-        propagate_point(grid, point, vec, description);
+        propagate_point(grid, point, vec, description)?;
     }
 
-    unimplemented!()
+    Ok(())
 }
 
 macro_rules! handle_direction {
@@ -146,12 +141,15 @@ fn propagate_point(
     point: Point,
     vec: BitVec,
     description: &CompiledDescription,
-) {
+) -> Result<(), ProblemError> {
     let mut queue = VecDeque::new();
     queue.push_back((point, vec));
 
     while let Some((point, new_domain)) = queue.pop_front() {
         if let Some(updated) = grid.update(point, &new_domain) {
+            if updated.count_ones() == 0 {
+                return Err(ProblemError::Unsatisfiable);
+            }
             let domain = updated.clone();
             let dimensions = grid.dimensions();
 
@@ -171,6 +169,8 @@ fn propagate_point(
             );
         }
     }
+
+    Ok(())
 }
 
 fn potential_domain<F>(domain: &BitVec, factory: F) -> BitVec

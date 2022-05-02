@@ -3,9 +3,9 @@ use rand::distributions::uniform::{SampleUniform, UniformSampler};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Dimensions {
-    width: usize,
-    height: usize,
-    depth: usize,
+    pub width: usize,
+    pub height: usize,
+    pub depth: usize,
 }
 
 impl Dimensions {

@@ -1,9 +1,11 @@
+use rand::Rng;
+
 use crate::{description::CompiledDescription, error::ProblemError, Solution, utils::FieldGrid};
 
 pub mod naive;
 
 pub trait ProblemSolver: Default {
-    fn solve(&mut self, description: &CompiledDescription) -> Result<FieldGrid, ProblemError>;
+    fn solve<R: Rng>(&mut self, rng: &mut R, description: &CompiledDescription) -> Result<FieldGrid, ProblemError>;
 }
 
 #[cfg(feature = "wasm")]
