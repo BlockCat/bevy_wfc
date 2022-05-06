@@ -1,37 +1,41 @@
 (
     scene: Some((
-        path: "./models/straight.glb#Scene0",
+        path: "./models/window.glb#Scene0",
         position: (0, 0, 0),
-        scale: (1, 1, 1),
+        scale: (1, 1, 1)
     )),
     tile: (
-        id: "RoofStraight",
+        id: "Window",
         up: [(
-            connection: "air"
+            connection: "block"
         )],
         down: [(
             connection: "block"
         )],
         left: [(
-            connection: "roof",
-            flipped: true,
-            symmetry: false
-        ), (
             connection: "block",
             flipped: false,
-            symmetry: false
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
         )],
         right: [(
-            connection: "roof",
-            flipped: false,
-            symmetry: false
-        ),(
             connection: "block",
             flipped: false,
-            symmetry: false
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
         )],
         forward: [(
-            connection: "roof-block",
+            connection: "block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "air",
             flipped: false,
             symmetry: true
         )],
@@ -41,6 +45,6 @@
             symmetry: true
         )],
         can_rotate: true,
-        can_flip: true
+        can_flip: true,
     )
 )

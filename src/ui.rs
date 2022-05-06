@@ -9,10 +9,12 @@ pub struct UIPlugin;
 
 struct UIState {
     error_message: Option<String>,
+    random_seed: bool,
+    seed: u64,
 }
 
 #[derive(Component)]
-pub struct LoadedSolution(Solution<String>);
+pub struct LoadedSolution(pub Solution<String>);
 
 impl Plugin for UIPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
@@ -20,11 +22,14 @@ impl Plugin for UIPlugin {
             .add_system(gui_system)
             .insert_resource(UIState {
                 error_message: None,
+                random_seed: true,
+                seed: 0,
             });
     }
 }
 
 fn gui_system(
+    time: Res<Time>,
     mut commands: Commands,
     mut egui_context: ResMut<EguiContext>,
     mut ui_state: ResMut<UIState>,
@@ -48,11 +53,27 @@ fn gui_system(
                 ui.end_row();
             });
 
+            ui.label("Random");
+
+            ui.add(egui::Checkbox::new(
+                &mut ui_state.random_seed,
+                "Use random seed",
+            ));
+
+            ui.add(egui::DragValue::new(&mut ui_state.seed));
+
             if ui.button("Generate").clicked() {
-                let mut rng = rand::rngs::SmallRng::seed_from_u64(0);
+                let mut rng = if ui_state.random_seed {
+                    rand::rngs::SmallRng::seed_from_u64(
+                        ((time.seconds_since_startup() * 1000.0) % (std::u64::MAX as f64)) as u64,
+                    )
+                } else {
+                    rand::rngs::SmallRng::seed_from_u64(ui_state.seed)
+                };
                 match wfc_solver::solve(&mut rng, wfc.description.clone()) {
                     Ok(solution) => {
                         commands.spawn().insert(LoadedSolution(solution));
+                        ui_state.error_message = None;
                     }
                     Err(err) => ui_state.error_message = Some(format!("Failed solving! {}", err)),
                 }

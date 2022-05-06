@@ -1,0 +1,70 @@
+(
+    scene: Some((
+        path: "./models/block.glb#Scene0",
+        position: (0, 0, 0),
+        scale: (1, 1, 1)
+    )),
+    tile: (
+        id: "Block",
+        up: [(
+            connection: "block"
+        )],
+        down: [(
+            connection: "block"
+        )],
+        left: [(
+            connection: "block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "roof-block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        right: [(
+            connection: "block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "roof-block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        forward: [(
+            connection: "block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "roof-block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        backward: [(
+            connection: "block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "roof-block",
+            flipped: false,
+            symmetry: true
+        ), (
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        can_rotate: true,
+        can_flip: true,
+    )
+)

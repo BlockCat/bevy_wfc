@@ -10,7 +10,7 @@ use wfc_solver::{
 #[derive(Debug, Default, Deserialize, TypeUuid)]
 #[uuid = "1df82c01-9c71-4fa8-adc4-78c5822268f8"]
 pub struct TileAsset {
-    pub scene: TileMesh,
+    pub scene: Option<TileMesh>,
     pub tile: Tile<String>,
 }
 
@@ -107,7 +107,9 @@ fn tile_asset_loader(
                 .map(|x: &&TileAsset| {
                     (
                         x.tile.id.clone(),
-                        (x.scene.clone(), asset_server.load(&x.scene.path)),
+                        x.scene
+                            .clone()
+                            .map(|scene: TileMesh| (scene.clone(), asset_server.load(&scene.path))),
                     )
                 })
                 .collect();
@@ -126,5 +128,5 @@ fn tile_asset_loader(
 #[derive(Debug)]
 pub struct WfcProblemResource {
     pub description: ProblemDescription<String>,
-    pub mapper: HashMap<String, (TileMesh, Handle<Scene>)>,
+    pub mapper: HashMap<String, Option<(TileMesh, Handle<Scene>)>>,
 }

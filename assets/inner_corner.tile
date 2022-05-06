@@ -1,11 +1,11 @@
 (
     scene: Some((
-        path: "./models/corner.glb#Scene0",
+        path: "./models/inner_corner.glb#Scene0",
         position: (0, 0, 0),
         scale: (1, 1, 1)
     )),
     tile: (
-        id: "RoofCorner",
+        id: "InnerRoofCorner",
         up: [(
             connection: "air"
         )],
@@ -13,24 +13,24 @@
             connection: "block"
         )],
         left: [(
-            connection: "roof",
+            connection: "roof-block",
             flipped: false,
-            symmetry: false
+            symmetry: true
         )],
         right: [(
-            connection: "air",
-            flipped: false,
-            symmetry: true,
-        )],
-        forward: [(
-            connection: "air",
-            flipped: false,
-            symmetry: true,
-        )],
-        backward: [(
             connection: "roof",
             flipped: true,
             symmetry: false,
+        )],
+        forward: [(
+            connection: "roof",
+            flipped: false,
+            symmetry: false,
+        )],
+        backward: [(
+            connection: "roof-block",
+            flipped: false,
+            symmetry: true
         )],
         can_rotate: true,
         can_flip: true,

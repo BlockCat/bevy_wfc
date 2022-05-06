@@ -1,11 +1,13 @@
-use bevy::{asset, prelude::*};
-use bevy_asset_ron::RonAssetPlugin;
-use bevy_fly_camera::{FlyCamera, FlyCameraPlugin};
+use bevy::{prelude::*, window::{WindowMode, PresentMode}};
+use camera::{CameraPlugin, CameraTag};
 use ui::UIPlugin;
-use wfc_asset::{TileAsset, WfcAssetPlugin};
+use wfc_asset::WfcAssetPlugin;
+use world::WorldPlugin;
 
-mod wfc_asset;
+mod camera;
 mod ui;
+mod wfc_asset;
+mod world;
 
 #[derive(Debug, Component)]
 struct TileTag;
@@ -19,28 +21,27 @@ struct TileTag;
 /// Check out [this issue](https://github.com/gfx-rs/wgpu/issues/1832) for more info.
 fn main() {
     App::new()
-        .insert_resource(Msaa { samples: 4 })
+        .add_startup_system(setup)
         .add_plugins(DefaultPlugins)
-        .add_plugin(FlyCameraPlugin)
+        .add_plugin(CameraPlugin)
         .add_plugin(WfcAssetPlugin)
         .add_plugin(UIPlugin)
-        .add_startup_system(setup)
+        .add_plugin(WorldPlugin)
         .add_system(cycle_msaa)
+        .insert_resource(Msaa { samples: 4 })
+        .insert_resource(WindowDescriptor {
+            title: "WFC".into(),
+            width: 1080.0,
+            height: 1920.0,
+            mode: WindowMode::BorderlessFullscreen,
+            present_mode: PresentMode::Fifo,
+            ..Default::default()
+        })
         .run();
 }
 
 /// set up a simple 3D scene
-fn setup(
-    mut commands: Commands,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    asset_server: Res<AssetServer>,
-) {
-    let rekt: Handle<TileAsset> = asset_server.load("straight.tile");
-    let rekt2: Handle<TileAsset> = asset_server.load("corner.tile");
-
-    commands.spawn().insert(rekt);
-    commands.spawn().insert(rekt2);
-
+fn setup(mut commands: Commands) {
     // light
     commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
@@ -49,10 +50,12 @@ fn setup(
     // camera
     commands
         .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_xyz(-3.0, 3.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+            transform: Transform::from_xyz(-10.0, 15.0, -10.0)
+                .looking_at(Vec3::new(7.0, 0.0, 7.0), Vec3::Y),
+
             ..default()
         })
-        .insert(FlyCamera::default());
+        .insert(CameraTag(Vec3::ZERO));
 }
 
 fn cycle_msaa(input: Res<Input<KeyCode>>, mut msaa: ResMut<Msaa>) {
@@ -66,4 +69,3 @@ fn cycle_msaa(input: Res<Input<KeyCode>>, mut msaa: ResMut<Msaa>) {
         }
     }
 }
-

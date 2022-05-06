@@ -9,7 +9,6 @@ version = "0.1.0"
 bevy = "0.7.0"
 bevy_asset_ron = "0.4.0"
 bevy_egui = "0.14"
-bevy_fly_camera = {git = "https://github.com/PikminGuts92/bevy_fly_camera", branch = "bevy-0.7"}
 rand = {version = "0.8.5", default-features = false, features = ["small_rng"]}
 
 serde = {version = "1", features = ["derive"]}
@@ -18,3 +17,4 @@ wfc_solver = {path = "./wfc_solver"}
 members = ["wfc_solver"]
 
 # cargo run --target wasm32-unknown-unknown
+# wasm-bindgen .\target\wasm32-unknown-unknown\release\bevy_wfc.wasm --out-dir ./out/

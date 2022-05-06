@@ -1,0 +1,34 @@
+(
+    scene: None,
+    tile: (
+        id: "Air",
+        up: [(
+            connection: "air"
+        )],
+        down: [(
+            connection: "air"
+        )],
+        left: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        right: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        forward: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        backward: [(
+            connection: "air",
+            flipped: false,
+            symmetry: true
+        )],
+        can_rotate: true,
+        can_flip: true
+    )
+)

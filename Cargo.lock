@@ -422,14 +422,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_fly_camera"
-version = "0.9.0"
-source = "git+https://github.com/PikminGuts92/bevy_fly_camera?branch=bevy-0.7#82da197468eb5dfbcc5fe53a3adfe54e8a8c5736"
-dependencies = [
- "bevy",
-]
-
-[[package]]
 name = "bevy_gilrs"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -800,7 +792,6 @@ dependencies = [
  "bevy",
  "bevy_asset_ron",
  "bevy_egui",
- "bevy_fly_camera",
  "rand",
  "serde",
  "wfc_solver",

@@ -1,5 +1,5 @@
-use bitvec::{macros::internal::funty::Integral, prelude::BitVec};
-use rand::distributions::uniform::{SampleUniform, UniformSampler};
+use bitvec::prelude::BitVec;
+use rand::distributions::uniform::UniformSampler;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Dimensions {
@@ -33,7 +33,7 @@ impl Dimensions {
 impl UniformSampler for Dimensions {
     type X = Point;
 
-    fn new<B1, B2>(low: B1, high: B2) -> Self
+    fn new<B1, B2>(_low: B1, _high: B2) -> Self
     where
         B1: rand::distributions::uniform::SampleBorrow<Self::X> + Sized,
         B2: rand::distributions::uniform::SampleBorrow<Self::X> + Sized,
@@ -41,7 +41,7 @@ impl UniformSampler for Dimensions {
         unreachable!()
     }
 
-    fn new_inclusive<B1, B2>(low: B1, high: B2) -> Self
+    fn new_inclusive<B1, B2>(_low: B1, _high: B2) -> Self
     where
         B1: rand::distributions::uniform::SampleBorrow<Self::X> + Sized,
         B2: rand::distributions::uniform::SampleBorrow<Self::X> + Sized,
@@ -108,8 +108,8 @@ impl Point {
     directional!(rem down, y, (0, 1, 0));
     directional!(rem backward, z, (0, 0, 1));
     directional!(add right, x, width, (1, 0, 0));
-    directional!(add up, x, width, (0, 1, 0));
-    directional!(add forward, x, width, (0, 0, 1));
+    directional!(add up, y, height, (0, 1, 0));
+    directional!(add forward, z, depth, (0, 0, 1));
 }
 
 #[derive(Debug, Clone)]
@@ -154,9 +154,8 @@ impl FieldGrid {
     }
 
     pub fn should_update(&self, point: Point, new_domain: &BitVec) -> bool {
-        !self
-            .get(point)
-            .map(|bv| new_domain.contains(bv)) // new_domain >= bv
+        self.get(point)
+            .map(|bv| new_domain.clone() & bv.clone() != bv.clone()) // new_domain >= bv
             .unwrap_or_default()
     }
 
